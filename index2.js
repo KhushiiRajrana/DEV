@@ -206,4 +206,47 @@ app.use(calculatereq);
 // and a middleware will only call the nextmiddleware in the row when next is called inside it
 // body can  json , text , html etc anything
 
+
+// Rate Limiting Middleware---->
+    // It protects your backend from:
+    // Brute force attacks
+    // DDoS attacks
+    // API abuse
+    // Too many requests from one user
+// it can  done using express-rate-limit package npm install express-rate-limit
+const rateLimit = require('express-rate-limit');
+const limiter = rateLimit({
+    windowMs:60*1000,
+    max:5,
+    message :"Too many requests from this IP, please try again after a minute"
+});
+//60*1000ms = 1min
+//ie. in 1 minute ,max 5 requests allowed from one IP
+// if rate limit exceeds then the message is sent in response
+
+// to apply  to specifc  route only
+app.get("/specific-route",limiter,(req,res)=>{
+    res.send("This route is rate limited");
+})
+
+
+// to apply to all routes , write this line before defining any route But after limiter
+app.use(limiter);
+
+// status code sent  rate limitimg middleware is 429 Too Many Requests
+
+// why does express 4 requires next(err) for async errors?
+// because in async functions , if error occurs  then the control is not passed to next middleware automatically  since the function is async .Express 4 does not automatically catch rejected Promises.
+//it automatically synchronous errors and errors passed to next(err) but not async errors
+// What Are “Async Errors”?
+    // An async error is an error that happens after the current call stack finishes, usually inside:
+    // async/await
+    // Promises
+    // setTimeout
+    // Database calls
+    // API calls
+    // File system operations
+    // In simple words:
+    // If the error happens later (not immediately), it’s asynchronous.
+
 // 55:26 start at this this time stamp
