@@ -108,5 +108,46 @@ function kidneyMiddleware (req,res,next){
 app.get("/Kidney-checkup",userMiddleware , kidneyMiddleware ,(req,res)=>{
     // do something ---> write logic for the changes you want
     res.send("Your kidneys are healthy");
-
 })
+
+// only pass the middleware that you need for that  particular route
+// example-->
+app.get("/heart-check",userMiddleware,(req,res)=>{
+    // you dont require kidney chek for heart checkup
+    res.send("Your heart is healthy");
+})
+
+// we can pass multiple call ack funcitons in our route ,  they will  executed in order
+// example-->
+app.get("/health-checkup",function(req,res){
+
+},function(req,res){
+
+},function(req,res){
+
+});
+
+// what if i sent response in first function , then there will  no point in executing next functions since response is already sent
+// 3 inputs will  used in these function  req,res,next
+// next is function in itself
+// all other function are precheck except the last one
+// if things go fine , i will call next() which will route the request to the next one  and the next function gains the control
+app.get("/health-checkup",function(req,res,next){
+    // code logic
+    next();
+
+},function(req,res,next){
+    // code logic
+    next();
+
+},function(req,res){
+    console.log("final function executed");
+    res.send("code completed");
+});
+// these extra functions in between are called middleware
+//  menitoned above snippet is same as
+// app.get("/heart-check",userMiddleware,(req,res)=>{
+//     // you dont require kidney chek for heart checkup
+//     res.send("Your heart is healthy");
+// })
+// isme middleare function top se declare kiya tha which is a good practice instead of defining function inside route.
