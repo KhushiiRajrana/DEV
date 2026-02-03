@@ -36,114 +36,113 @@ app.listen(3000, function () {
   console.log("Server is running on port 3000");
 });
 
- // in case of multiple routes t with same input
- // 1-Approach : ugly way of handling authentication and input validation
- ///------> create separate routes and write logic for authentication and input validation in each route --> avpid dry priniciple due to unnecessary repeatation of code
+// in case of multiple routes t with same input
+// 1-Approach : ugly way of handling authentication and input validation
+///------> create separate routes and write logic for authentication and input validation in each route --> avpid dry priniciple due to unnecessary repeatation of code
 
- // 2-Approach : slightly better way of handling authentication and input validation  using wrapper function
- // create function for autrhentication and validation at top and use them in your routes
- // logic is written low
- function authenticate(username, password){
-    if(username != "Khushi"|| password !="password123"){
-        return false;
-    }
-    return true;
- }
-
- function validateKidneyId(kidneyId){
-    if(kidneyId ==1 || kidneyId==2){
-        return true;
-    }
+// 2-Approach : slightly better way of handling authentication and input validation  using wrapper function
+// create function for autrhentication and validation at top and use them in your routes
+// logic is written low
+function authenticate(username, password) {
+  if (username != "Khushi" || password != "password123") {
     return false;
- }
+  }
+  return true;
+}
+
+function validateKidneyId(kidneyId) {
+  if (kidneyId == 1 || kidneyId == 2) {
+    return true;
+  }
+  return false;
+}
 // route using these functions
 
-app.put("/replace-kidney",(req,res)=>{
-    const kidneyId = req.query.kidneyId;
-    const username= req.headers.username;
-    const password = req.headers.password;
-    if(!authenticate(username , password)){
-        res.status(401).json({
-            msg:"authentication failed"
-        })
-        return;
-    }
+app.put("/replace-kidney", (req, res) => {
+  const kidneyId = req.query.kidneyId;
+  const username = req.headers.username;
+  const password = req.headers.password;
+  if (!authenticate(username, password)) {
+    res.status(401).json({
+      msg: "authentication failed",
+    });
+    return;
+  }
 
-    if(!validateKidneyId(KidneyId)){
-        res.status(400).json({
-            msg:"invalid kidney id"
-        })
-        return;
-    }
+  if (!validateKidneyId(KidneyId)) {
+    res.status(400).json({
+      msg: "invalid kidney id",
+    });
+    return;
+  }
 
-    res.send("Your kidneys are healthy now");
-})
+  res.send("Your kidneys are healthy now");
+});
 // put usually usees Body not query  since put is to update data and Body is meant  to update data;
 
-
 // 3->using  middleware  function
-function userMiddleware(req, res,next){
-    if(username != "Khushi" && password != "password123"){
-        res.status(403).json({
-            msg:"incorrect username or password"
-        })
-    }
-    else{
-        next();
-    }
-};
+function userMiddleware(req, res, next) {
+  if (username != "Khushi" && password != "password123") {
+    res.status(403).json({
+      msg: "incorrect username or password",
+    });
+  } else {
+    next();
+  }
+}
 
-function kidneyMiddleware (req,res,next){
-    const kidneyId = req.query.kidneyId;        
-    if(kidneyId !=1 && kidneyId !=2){
-        res.status(400).json({
-            msg:"invalid kidney id"
-        })
-    }
-    else{       
-         next();
-    }   
-};
+function kidneyMiddleware(req, res, next) {
+  const kidneyId = req.query.kidneyId;
+  if (kidneyId != 1 && kidneyId != 2) {
+    res.status(400).json({
+      msg: "invalid kidney id",
+    });
+  } else {
+    next();
+  }
+}
 
-app.get("/Kidney-checkup",userMiddleware , kidneyMiddleware ,(req,res)=>{
-    // do something ---> write logic for the changes you want
-    res.send("Your kidneys are healthy");
-})
+app.get("/Kidney-checkup", userMiddleware, kidneyMiddleware, (req, res) => {
+  // do something ---> write logic for the changes you want
+  res.send("Your kidneys are healthy");
+});
 
 // only pass the middleware that you need for that  particular route
 // example-->
-app.get("/heart-check",userMiddleware,(req,res)=>{
-    // you dont require kidney chek for heart checkup
-    res.send("Your heart is healthy");
-})
+app.get("/heart-check", userMiddleware, (req, res) => {
+  // you dont require kidney chek for heart checkup
+  res.send("Your heart is healthy");
+});
 
 // we can pass multiple call ack funcitons in our route ,  they will  executed in order
 // example-->
-app.get("/health-checkup",function(req,res){
-
-},function(req,res){
-
-},function(req,res){
-
-});
+app.get(
+  "/health-checkup",
+  function (req, res) {},
+  function (req, res) {},
+  function (req, res) {},
+);
 
 // what if i sent response in first function , then there will  no point in executing next functions since response is already sent
 // 3 inputs will  used in these function  req,res,next
 // next is function in itself
 // all other function are precheck except the last one
 // if things go fine , i will call next() which will route the request to the next one  and the next function gains the control
-app.get("/health-checkup",function(req,res,next){
+app.get(
+  "/health-checkup",
+  function (req, res, next) {
     // code logic
     next();
-
-},function(req,res,next){
+  },
+  function (req, res, next) {
     // code logic
     next();
-
-},function(req,res){
+  },
+  function (req, res) {
     console.log("final function executed");
     res.send("code completed");
-});
+  },
+);
 // these extra functions in between are called middleware
 //  menitoned above snippet is same as
 // app.get("/heart-check",userMiddleware,(req,res)=>{
@@ -151,3 +150,60 @@ app.get("/health-checkup",function(req,res,next){
 //     res.send("Your heart is healthy");
 // })
 // isme middleare function top se declare kiya tha which is a good practice instead of defining function inside route.
+//
+
+// ✅ Case 1: Setting Status in One Middleware, Sending in Another (Valid)
+
+// This works:
+
+// app.get("/test",
+//   (req, res, next) => {
+//       res.status(200);   // only setting status
+//       next();
+//   },
+//   (req, res) => {
+//       res.send("OK");    // sending response
+//   }
+// );
+
+// ✔ Valid
+// ✔ Only one response sent
+
+// ❌ Case 2: Sending Response in Two Middlewares (Not Allowed)
+
+// This will crash:
+
+// app.get("/test",
+//   (req, res, next) => {
+//       res.status(200).send("First response");
+//       next();  // ❌
+//   },
+//   (req, res) => {
+//       res.send("Second response");  // ❌ ERROR
+//   }
+// );
+
+// Error:
+
+// Error: Cannot set headers after they are sent to the client
+// Because response is already finished.
+
+
+let numberOfRequests = 0;
+function calculatereq(req,res,next){
+    numberOfRequests++;
+    console.log("Number of requests received : " + numberOfRequests);
+    next();
+}
+
+app.use(calculatereq);
+// it means any request that come to any of the routes after this line will have this middleware executed first
+// this middleware will not  executes for routes defined before this line
+
+// similarly  you can use third party middlewares
+
+// in app.use(express.json())  express.json() is also a middleware that will be executed for every request coming to the server  and express.json() itself returns a middleware function
+// and a middleware will only call the nextmiddleware in the row when next is called inside it
+// body can  json , text , html etc anything
+
+// 55:26 start at this this time stamp
