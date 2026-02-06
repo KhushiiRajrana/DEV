@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function getAnimalData(){
+            const response=fetch('https://fakerapi.it/api/v1/persons');
+            // this will  defalut send a get request to the url and return a promise which will be resolved with the response of the request. we can use then method to handle the response and extract the data from it.
+            // if you want to send a post request you can use the fetch method like this :
+            // fetch('https://fakerapi.it/api/v1/persons',{
+            //     method:'POST',
+            // fetch is any synchronous call , it has to go via a bunch of wires to recah the internet to reach this fakerapi.it  and when the response is received it has to come back via the same wires and then it will be resolved with the response of the request. so it is an asynchronous call and it will not block the execution of the code. so when we call the getAnimalData function it will send a request to the url and then it will immediately return a promise which will be resolved with the response of the request. so we can use then method to handle the response and extract the data from it.
+            // syntax to fetch data  from a promise is like this :
+            fetch('https://fakerapi.it/api/v1/persons').then(function(response){
+
+            })
+            // or response.then((response)=>{       
+            // })
+            // callack is generally not used with fetch cause fetch returns a promise itself so why use a callback when we can use then method to handle the response and extract the data from it. so we can use then method to handle the response and extract the data from it.
+            // now  we have access to response   --> start the lecture from 13.10 min
+
+
+            console.log(response);
+        }
+    </script>
+    <button onclick="getAnimalData()">Get Animal data</button>
+    
+</body>
+</html>

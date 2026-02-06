@@ -249,4 +249,25 @@ app.use(limiter);
     // In simple words:
     // If the error happens later (not immediately), it’s asynchronous.
 
+
+
+//     Async errors occur in asynchronous operations like async/await or Promises, happening after the main execution stack.
+// Express 4 example (manual handling needed):
+// app.get("/test", async (req, res, next) => {
+//     try {
+//         await Promise.reject("DB failed");
+//     } catch (err) {
+//         next(err); // must pass error manually
+//     }
+// });
+// Express 5 example (automatic handling):
+// app.get("/test", async (req, res) => {
+//     throw new Error("DB failed"); // automatically sent to error middleware
+// });
+// Synchronous error (caught in both versions):
+// app.get("/sync", (req, res) => {
+//     throw new Error("Sync error");
+// });
+// Rate limiting returns: 429 Too Many Requests when limit exceeded.
+
 // 55:26 start at this this time stamp
