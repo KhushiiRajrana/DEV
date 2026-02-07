@@ -7,6 +7,7 @@
 </head>
 <body>
     <script>
+        // this is the understanding of coder to hit ackend from frontend , not the actual  ackend code
         function getAnimalData(){
             const response=fetch('https://fakerapi.it/api/v1/persons');
             // this will  defalut send a get request to the url and return a promise which will be resolved with the response of the request. we can use then method to handle the response and extract the data from it.
@@ -15,19 +16,49 @@
             //     method:'POST',
             // fetch is any synchronous call , it has to go via a bunch of wires to recah the internet to reach this fakerapi.it  and when the response is received it has to come back via the same wires and then it will be resolved with the response of the request. so it is an asynchronous call and it will not block the execution of the code. so when we call the getAnimalData function it will send a request to the url and then it will immediately return a promise which will be resolved with the response of the request. so we can use then method to handle the response and extract the data from it.
             // syntax to fetch data  from a promise is like this :
-            fetch('https://fakerapi.it/api/v1/persons').then(function(response){
+            // fetch('https://fakerapi.it/api/v1/persons').then(function(response){
+                
 
-            })
+            // })
             // or response.then((response)=>{       
             // })
             // callack is generally not used with fetch cause fetch returns a promise itself so why use a callback when we can use then method to handle the response and extract the data from it. so we can use then method to handle the response and extract the data from it.
-            // now  we have access to response   --> start the lecture from 13.10 min
+            // now  we have access to response  
 
 
-            console.log(response);
+            // console.log(response);
+            // fetch('https://fakerapi.it/api/v1/persons').then(function(response){
+            //     const json = response.json();
+            //     console.log(json);
+            //     // this  is also a promise we need to await it as well to get the actual data from it. so we can use then method to handle the response and extract the data from it.
+            // })
+            fetch('https://fakerapi.it/api/v1/persons').then(function(response){
+                response.json().then(function(finalData){
+                    // now  i have access to the actual final data which is in json format and i can use it to do whatever i want with it. so we can use then method to handle the response and extract the data from it.
+                    console.log(finalData);
+
+                })
+            })
         }
     </script>
     <button onclick="getAnimalData()">Get Animal data</button>
     
 </body>
 </html>
+<!-- this is the one way to write the fetch code logic
+function getAnimalData(){
+    fetch('https://fakerapi.it/api/v1/persons').then(function(response){
+        response.json().then(function(finalData){
+            console.log(finalData);
+        })
+    })
+}
+
+another way to write the same logic is using async await syntax which is more cleaner and easier to read and understand. so we can use async await syntax to write the same logic like this :
+
+async function getAnimalData(){
+    const response = await fetch('https://fakerapi.it/api/v1/persons');
+    const finalData = await response.json();
+    console.log(finalData);
+} -->
+    <!-- // this is the one way to write the fetch code logic not to render the data on the actual page , we have just logged the data -->

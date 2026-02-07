@@ -10,3 +10,7 @@
 // 3rd way is using fetch api
 // proem statement is write some html code that will hit  ---> it is in index.html file
 
+// next file contains the authentication code using express 
+// project for the day --> let people sign up to your wensite only allow signed in users to see people (create a dummy people list)
+
+ 
