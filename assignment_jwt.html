@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        async function getUserData(){
+            const response = await fetch('https://fakerapi.it/api/v1/persons');
+            const finalData = await response.json();
+            document.getElementById('userData').innerHTML = JSON.stringify(finalData);
+        }
+
+        // your password should i have 8 letters , 2upper , 1 lowercase , 1 numr and 1 special character
+    </script>
+</body>
+</html>
