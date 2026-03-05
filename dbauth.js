@@ -90,7 +90,7 @@ mongoose.connect(
 
 async function main() {
 
-  await mongoose.connect("mongodb://localhost:27017/user_app");
+  await mongoose.connect("mongodb://dguyfgjuyourconnectionstring");
 
   const Users = mongoose.model("Users", {
     name: String,
@@ -109,3 +109,33 @@ async function main() {
   console.log("User saved to database");
 
 }
+
+
+// sign up logic using the database
+app.post("/signup",function(req,res){
+    const username  = req.body.username ;
+    const password = req.body.password;
+    const name = req.body.name;
+
+    // check for existing user before inserting data
+    const existingUser = User.findOne({email : username});
+    if(existingUser){
+        return res.status(400).send("username already exists");
+    }
+
+    // do all crud opeartions here
+    //1. Create
+    // if not , add the user to the db/collection
+    const user  = new User({
+        name :name ,
+        email :username ,
+        password :password
+    });
+    //save explcicitly
+    user.save();
+    res.json({
+        "msg" :"user created successfully"
+    })
+
+
+})
